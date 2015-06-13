@@ -61,7 +61,7 @@ def get_end_quad(net, mask):
 
 
 def get_hexs_on_subnet(net, mask):
-	return [int_to_hex(i) for i in range(hex_to_int(get_start_hex(net, mask)), hex_to_int(get_end_hex(net, mask))+1):
+	return [int_to_hex(i) for i in range(hex_to_int(get_start_hex(net, mask)), hex_to_int(get_end_hex(net, mask))+1)]
 
 
 def get_quads_on_subnet(net, mask):
