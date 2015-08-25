@@ -69,14 +69,14 @@ def get_quads_on_subnet(net, mask):
 
 
 def get_net_and_mask():
-	for line in Popen('ifconfig -a', shell=True, stdout=PIPE).communicate()[0].split('\n'):
+	for line in reversed(Popen('ifconfig -a', shell=True, stdout=PIPE).communicate()[0].split('\n')):
 		if ('inet' if sys.platform == 'darwin' else 'inet addr') in line and ('netmask' if sys.platform == 'darwin' else 'Mask') in line:
 			addr = line.split(('inet' if sys.platform == 'darwin' else 'inet addr:'))[1].strip().split()[0]
 			mask = line.split(('netmask' if sys.platform == 'darwin' else 'Mask:'))[1].strip().split()[0]
 			if '127.0.0.1' == addr:
 				continue
 			else:
-				return addr, hex_to_quad(mask)
+				return addr, mask
 
 
 def do_sys_ping(addr):
@@ -84,7 +84,7 @@ def do_sys_ping(addr):
 
 
 def ping_all_on_net(net, mask):
-	executor = futures.ThreadPoolExecutor(200)
+	executor = futures.ThreadPoolExecutor(15)
 	actives = {executor.submit(do_sys_ping, quad):quad for quad in get_quads_on_subnet(net, mask)}
 	try:
 		for future in futures.as_completed(actives, 2):
