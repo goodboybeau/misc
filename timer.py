@@ -33,20 +33,21 @@ if __name__ == '__main__':
 
     # get the timer name
     timer = sys.argv[1]
+    timer_dir = '{}/{}'.format(TIMER_DIR, timer)
     if sys.argv[2] == 'start':
         start_date = time.strftime("%m/%d/%Y %H:%M:%S")
         # overwrite the timer's file contents with start date and timestamp
-        open(timer, 'w').write('{}, {}'.format(start_date, time.time()))
+        open(timer_dir, 'w').write('{}, {}'.format(start_date, time.time()))
         print 'Timer<{}> started at {}'.format(timer, start_date)
 
     else:
         # if it doesn't exist then it hasn't been started yet
-        if not os.path.exists('{}/{}'.format(TIMER_DIR, timer)):
+        if not os.path.exists(timer_dir):
             print 'Timer<{}> does not exist in {}'.format(timer, TIMER_DIR)
             exit()
 
         # it does exists, so read it and parse
-        with open(timer, 'r') as f:
+        with open(timer_dir, 'r') as f:
             # start timestamp
             start = float(f.read().split(', ')[1])
 
@@ -63,6 +64,6 @@ if __name__ == '__main__':
 
             # try to remove the file, just stuff the error
             try:
-                os.remove('{}/{}'.format(TIMER_DIR, timer))
+                os.remove(timer_dir)
             except:
                 pass
